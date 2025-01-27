@@ -50,12 +50,15 @@ def generate_test_data(
         "DrivingLicense": generate_driving_license
     }
 
+    # Filter id_generators based on requested id_types
+    selected_generators = {k: v for k, v in id_generators.items() if k in id_types}
+
     def generate_mock_data():
         data = []
-        generator_keys = list(id_generators.keys())
+        generator_keys = list(selected_generators.keys())
         for i in range(rows - 1):
             id_type = generator_keys[i % len(generator_keys)]
-            id_value = id_generators[id_type]()
+            id_value = selected_generators[id_type]()
             data.append({"ID_Type": id_type, "ID_Value": id_value})
         return data
 
@@ -122,8 +125,7 @@ def generate_test_data(
             elif fmt == "zip":
                 write_zip(data, f"test_data{filename_suffix}.zip")
             elif fmt == "tsv":
-                write_csv(data, f"test_data{filename_suffix}.tsv", delimiter='\t')
-                
+                write_csv(data, f"test_data{filename_suffix}.tsv", delimiter='\t')                
                 
 ## Generate all formats with default settings
 #generate_test_data()
